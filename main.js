@@ -1,7 +1,9 @@
+"use strict";
+
 let context = undefined;
 
 const fps = 30.0;
-const isSoundOn = false;
+const isSoundOn = true;
 const backgroundColor = "#efe";
 
 let minX = 0;
@@ -39,7 +41,7 @@ window.onload = (ev) => {
     {
         for (let y = 100; y <= window.innerHeight - 100; y = y + 30)
         {
-            var element = new Element(x, y, Math.random() < 0.9);
+            var element = new Element(x, y, Math.random() < 0.7);
             if (!element.isFake)
                 elements.push(element);
         }
@@ -53,7 +55,7 @@ window.onload = (ev) => {
         const yVelocity = Math.random() * 20.0 - 10.0;
         var bit = new Bit(x, y, xVelocity, yVelocity, 0)
         
-        collided = false;
+        let collided = false;
         for (let j = 0; j < elements.length && !collided; j++)
         {
             collided = elements[j].checkCollision(bit);
@@ -81,7 +83,7 @@ window.onload = (ev) => {
             delayRender();
         }, 
         1000 / fps / 3.0);
-    };
+    }
 
     render(context);
     delayRender();
@@ -107,7 +109,7 @@ function render(context)
 
     for (let i = 0; i < elementsToRemove.length; i++)
     {
-        var index = elements.findIndex(e => e == elementsToRemove[i]);
+        var index = elements.findIndex(e => e === elementsToRemove[i]);
         elements.splice(index, 1);
     }
 
@@ -131,7 +133,7 @@ function doPhysics()
 
     for (let i = 0; i < bitsToDelete.length; i++)
     {
-        var index = bits.findIndex(e => e == bitsToDelete[i]);
+        var index = bits.findIndex(e => e === bitsToDelete[i]);
         bits.splice(index, 1);
     }
 
@@ -146,13 +148,13 @@ function doPhysics()
         {
             if (element.checkCollision(bits[j]))
             {
-                collidedBit = bits[j];;
+                collidedBit = bits[j]
             }
         }
 
         if (!element.isFake && !element.wasDisposed && collidedBit)
         {
-            var newBits = element.emitBits(collidedBit);
+            const newBits = element.emitBits(collidedBit);
             bitsToAdd.push(...newBits);
             element.wasDisposed = true;
             
